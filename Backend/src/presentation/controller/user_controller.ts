@@ -54,6 +54,7 @@ if (!authReq.user) {
         }
       })
     }catch(error){
+      console.log(error)
       res.status(500).json({
         success:false,
         message:ERROR_MESSAGE.INTERNEL_SERVER_ERROR
@@ -88,6 +89,7 @@ if (!authReq.user) {
   }
   async login(req: Request, res: Response): Promise<void> {
     try {
+      console.log('heyyy')
       const data = req.body as LoginUserDTO;
       const validatedData = loginSchema.parse(data);
       if (!validatedData) {
@@ -130,6 +132,7 @@ if (!authReq.user) {
         user: userWithoutPassword,
       });
     } catch (err) {
+      console.log(err)
       if (err instanceof CustomError) {
         res.status(err.statusCode).json({
           success: false,

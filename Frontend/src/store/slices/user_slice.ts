@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/tool
 import { refreshSession } from "../../service/userservice";
 
 interface User {
-    userId:string,
+    userId?:string,
     email:string,
     fullName:string
 }

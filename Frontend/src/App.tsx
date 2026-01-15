@@ -16,6 +16,9 @@ import SalesPage from "./pages/customer/RecordSales"
 import SalesReportPage from "./pages/customer/Reports"
 import ItemReportPage from "./pages/customer/ItemReportPage"
 import MainLayout from "./components/MainLayout"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+
 
 function App() {
   const dispatch = useDispatch<AppDispath>()
@@ -102,6 +105,11 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
+       <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        theme="colored"
+      />
     </>
   )
 }
