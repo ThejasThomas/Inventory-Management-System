@@ -27,7 +27,7 @@ const AddProductPage = () => {
   const [touched, setTouched] = useState<
     Partial<Record<keyof AddProductForm, boolean>>
   >({});
-  const [isValid, setIsValid] = useState(false);
+  // const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(false);
   const [apiMessage, setApiMessage] = useState<string | null>(null);
 
@@ -38,7 +38,7 @@ const AddProductPage = () => {
 
     if (result.success) {
       setErrors({});
-      setIsValid(true);
+      // setIsValid(true);
     } else {
       const fieldErrors: Partial<Record<keyof AddProductForm, string>> = {};
       result.error.issues.forEach((err) => {
@@ -46,7 +46,7 @@ const AddProductPage = () => {
         fieldErrors[field] = err.message;
       });
       setErrors(fieldErrors);
-      setIsValid(false);
+      // setIsValid(false);
     }
   }, [form, touched]);
 
