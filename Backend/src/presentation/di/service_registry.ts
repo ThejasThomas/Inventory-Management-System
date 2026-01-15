@@ -5,6 +5,8 @@ import { IBcrypt } from "../security/bcrypt_interface";
 import { PasswordBcrypt } from "../security/password_bcrypt";
 import { ITokenService } from "../../domain/serviceInterface/token_service_interface";
 import { TokenService } from "../../interfaceAdapters/services/token_service";
+import { IProductExistenceService } from "../../domain/serviceInterface/product_existence_service_interface";
+import { ProductExistenceService } from "../../interfaceAdapters/services/product_existence_service";
 
 export class ServiceRegistry{
     static registerServices():void{
@@ -16,6 +18,9 @@ export class ServiceRegistry{
         })
         container.register<ITokenService>("ITokenService",{
             useClass:TokenService
+        })
+        container.register<IProductExistenceService>("IProductExistenceService",{
+            useClass:ProductExistenceService
         })
     }
     

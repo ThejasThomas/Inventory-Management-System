@@ -32,9 +32,7 @@ export class ProductController implements IProductController {
 
   async addProduct(req: Request, res: Response): Promise<void> {
     try {
-      console.log("heyyyyy");
       const { name, description, quantity, price } = req.body;
-      console.log(name, description, quantity, price);
       const authReq = req as AuthRequest;
       console.log("userrr", authReq.user?.userId);
 
@@ -46,7 +44,7 @@ export class ProductController implements IProductController {
         return;
       }
       const userId = authReq.user.userId;
-
+      console.log('eeeeee')
       const product = await this._addProductUsecase.execute({
         userId,
         name,

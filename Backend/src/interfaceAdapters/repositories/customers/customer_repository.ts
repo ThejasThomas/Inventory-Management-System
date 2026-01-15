@@ -120,7 +120,6 @@ export class CustomerRepository implements ICustomerRepository {
       $sort: { totalQuantity: -1 } 
     }
   ]);
-  console.log('report',report)
 
   return report.map((r) => ({
     productName: r._id,

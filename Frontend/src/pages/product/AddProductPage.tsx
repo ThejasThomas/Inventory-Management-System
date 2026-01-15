@@ -1,80 +1,95 @@
+import type React from "react";
 
-import type React from "react"
-
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import { Loader2, Package, FileText, Hash, IndianRupee } from "lucide-react"
-import { addProductSchema, type AddProductForm } from "../../validation/add_product_validation"
-import { addProduct } from "../../service/userservice"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Loader2, Package, FileText, Hash, IndianRupee } from "lucide-react";
+import {
+  addProductSchema,
+  type AddProductForm,
+} from "../../validation/add_product_validation";
+import { addProduct } from "../../service/userservice";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AddProductPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [form, setForm] = useState<AddProductForm>({
     name: "",
     description: "",
     quantity: 0,
     price: 1,
-  })
+  });
 
-  const [errors, setErrors] = useState<Partial<Record<keyof AddProductForm, string>>>({})
-  const [touched, setTouched] = useState<Partial<Record<keyof AddProductForm, boolean>>>({})
-  const [isValid, setIsValid] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [apiMessage, setApiMessage] = useState<string | null>(null)
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof AddProductForm, string>>
+  >({});
+  const [touched, setTouched] = useState<
+    Partial<Record<keyof AddProductForm, boolean>>
+  >({});
+  const [isValid, setIsValid] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [apiMessage, setApiMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (Object.keys(touched).length === 0) return
+    if (Object.keys(touched).length === 0) return;
 
-    const result = addProductSchema.safeParse(form)
+    const result = addProductSchema.safeParse(form);
 
     if (result.success) {
-      setErrors({})
-      setIsValid(true)
+      setErrors({});
+      setIsValid(true);
     } else {
-      const fieldErrors: Partial<Record<keyof AddProductForm, string>> = {}
+      const fieldErrors: Partial<Record<keyof AddProductForm, string>> = {};
       result.error.issues.forEach((err) => {
-        const field = err.path[0] as keyof AddProductForm
-        fieldErrors[field] = err.message
-      })
-      setErrors(fieldErrors)
-      setIsValid(false)
+        const field = err.path[0] as keyof AddProductForm;
+        fieldErrors[field] = err.message;
+      });
+      setErrors(fieldErrors);
+      setIsValid(false);
     }
-  }, [form, touched])
+  }, [form, touched]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
       [name]: name === "quantity" || name === "price" ? Number(value) : value,
-    }))
-  }
+    }));
+  };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name } = e.target
-    setTouched((prev) => ({ ...prev, [name]: true }))
-  }
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setTouched({ name: true, description: true, quantity: true, price: true })
+    e.preventDefault();
+    setTouched({ name: true, description: true, quantity: true, price: true });
 
-    const result = addProductSchema.safeParse(form)
-    if (!result.success) return
+    const result = addProductSchema.safeParse(form);
+    if (!result.success) return;
 
     try {
-      setLoading(true)
-      setApiMessage(null)
-      await addProduct(form)
-      setApiMessage("Product added successfully")
-      setTimeout(() => navigate("/home"), 800)
+      setLoading(true);
+      setApiMessage(null);
+      const response = await addProduct(form);
+      const successMsg = response?.message || "Product added successfully";
+      toast.success(successMsg);
+
+      setApiMessage("Product added successfully");
+      setTimeout(() => navigate("/home"), 800);
     } catch (err: any) {
-      setApiMessage(err?.response?.data?.message || "Failed to add product")
+      const errorMsg = err?.response?.data?.message || "Failed to add product";
+      toast.error(errorMsg);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
@@ -89,13 +104,19 @@ const AddProductPage = () => {
               <Package className="text-slate-700 h-8 w-8" />
             </div>
           </div>
-          <h1 className="text-3xl font-light text-slate-900 tracking-tight">Add New Product</h1>
-          <p className="text-slate-500 mt-2 font-light">Create a new product inventory</p>
+          <h1 className="text-3xl font-light text-slate-900 tracking-tight">
+            Add New Product
+          </h1>
+          <p className="text-slate-500 mt-2 font-light">
+            Create a new product inventory
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-light text-slate-700 mb-2">Product Name</label>
+            <label className="block text-sm font-light text-slate-700 mb-2">
+              Product Name
+            </label>
             <div className="relative">
               <Package className="absolute left-4 top-3.5 h-5 w-5 text-slate-400" />
               <input
@@ -112,11 +133,17 @@ const AddProductPage = () => {
                 }`}
               />
             </div>
-            {touched.name && errors.name && <p className="text-xs text-red-600 mt-1 font-light">{errors.name}</p>}
+            {touched.name && errors.name && (
+              <p className="text-xs text-red-600 mt-1 font-light">
+                {errors.name}
+              </p>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-light text-slate-700 mb-2">Description</label>
+            <label className="block text-sm font-light text-slate-700 mb-2">
+              Description
+            </label>
             <div className="relative">
               <FileText className="absolute left-4 top-3.5 h-5 w-5 text-slate-400" />
               <textarea
@@ -134,12 +161,16 @@ const AddProductPage = () => {
               />
             </div>
             {touched.description && errors.description && (
-              <p className="text-xs text-red-600 mt-1 font-light">{errors.description}</p>
+              <p className="text-xs text-red-600 mt-1 font-light">
+                {errors.description}
+              </p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-light text-slate-700 mb-2">Quantity</label>
+            <label className="block text-sm font-light text-slate-700 mb-2">
+              Quantity
+            </label>
             <div className="relative">
               <Hash className="absolute left-4 top-3.5 h-5 w-5 text-slate-400" />
               <input
@@ -157,12 +188,16 @@ const AddProductPage = () => {
               />
             </div>
             {touched.quantity && errors.quantity && (
-              <p className="text-xs text-red-600 mt-1 font-light">{errors.quantity}</p>
+              <p className="text-xs text-red-600 mt-1 font-light">
+                {errors.quantity}
+              </p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-light text-slate-700 mb-2">Price</label>
+            <label className="block text-sm font-light text-slate-700 mb-2">
+              Price
+            </label>
             <div className="relative">
               <IndianRupee className="absolute left-4 top-3.5 h-5 w-5 text-slate-400" />
               <input
@@ -178,7 +213,11 @@ const AddProductPage = () => {
                 }`}
               />
             </div>
-            {touched.price && errors.price && <p className="text-xs text-red-600 mt-1 font-light">{errors.price}</p>}
+            {touched.price && errors.price && (
+              <p className="text-xs text-red-600 mt-1 font-light">
+                {errors.price}
+              </p>
+            )}
           </div>
 
           {apiMessage && (
@@ -203,7 +242,7 @@ const AddProductPage = () => {
         </form>
       </motion.div>
     </div>
-  )
-}
+  );
+};
 
-export default AddProductPage
+export default AddProductPage;

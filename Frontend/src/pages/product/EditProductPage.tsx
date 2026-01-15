@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import type { IProductData } from "../../types/product_types";
 import { getProductById, editProduct } from "../../service/userservice";
 import { toast } from "react-toastify";
+import { Loader2, Edit, Package, FileText, Hash, IndianRupee } from "lucide-react";
 
 const EditProductPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -70,7 +72,7 @@ const EditProductPage = () => {
       setSaving(true);
       await editProduct(id, form);
 
-      toast.success(" Product updated successfully");
+      toast.success("Product updated successfully");
       navigate("/home");
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Update failed");
@@ -79,67 +81,146 @@ const EditProductPage = () => {
     }
   };
 
-  if (loading) return <div className="p-6">Loading product...</div>;
-  if (error) return <div className="p-6 text-red-600">{error}</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center"
+        >
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Loader2 className="animate-spin text-slate-600" size={40} />
+            <p className="text-slate-700 font-light">Loading product details...</p>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center max-w-md"
+        >
+          <p className="text-red-600 font-light">{error}</p>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-lg bg-white rounded-2xl shadow-xl p-6 space-y-4"
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-xl bg-white rounded-2xl shadow-xl p-8"
       >
-        <h1 className="text-2xl font-bold text-center">Edit Product</h1>
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <div className="bg-slate-100 p-4 rounded-full">
+              <Edit className="text-slate-700 h-8 w-8" />
+            </div>
+          </div>
+          <h1 className="text-3xl font-light text-slate-900 tracking-tight">Edit Product</h1>
+          <p className="text-slate-500 mt-2 font-light">Update your product details</p>
+        </div>
 
-        <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          placeholder="Product name"
-          className="w-full border p-2 rounded-lg"
-        />
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-light text-slate-700 mb-2">Product Name</label>
+            <div className="relative">
+              <Package className="absolute left-4 top-3.5 h-5 w-5 text-slate-400" />
+              <input
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Enter product name"
+                className="w-full pl-12 pr-4 py-2.5 bg-slate-50 border rounded-lg font-light transition-all outline-none border-slate-200 focus:bg-white focus:ring-2 focus:ring-slate-300"
+              />
+            </div>
+          </div>
 
-        <textarea
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-          placeholder="Description"
-          className="w-full border p-2 rounded-lg"
-        />
+          <div>
+            <label className="block text-sm font-light text-slate-700 mb-2">Description</label>
+            <div className="relative">
+              <FileText className="absolute left-4 top-3.5 h-5 w-5 text-slate-400" />
+              <textarea
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                rows={3}
+                placeholder="Enter product description"
+                className="w-full pl-12 pr-4 py-2.5 bg-slate-50 border rounded-lg font-light transition-all outline-none resize-none border-slate-200 focus:bg-white focus:ring-2 focus:ring-slate-300"
+              />
+            </div>
+          </div>
 
-        <input
-          type="number"
-          name="quantity"
-          value={form.quantity}
-          onChange={handleChange}
-          placeholder="Quantity"
-          className="w-full border p-2 rounded-lg"
-        />
+          <div className="grid grid-cols-2 gap-5">
+            <div>
+              <label className="block text-sm font-light text-slate-700 mb-2">Quantity</label>
+              <div className="relative">
+                <Hash className="absolute left-4 top-3.5 h-5 w-5 text-slate-400" />
+                <input
+                  type="number"
+                  name="quantity"
+                  value={form.quantity}
+                  onChange={handleChange}
+                  placeholder="0"
+                  min="0"
+                  className="w-full pl-12 pr-4 py-2.5 bg-slate-50 border rounded-lg font-light transition-all outline-none appearance-none border-slate-200 focus:bg-white focus:ring-2 focus:ring-slate-300"
+                />
+              </div>
+            </div>
 
-        <input
-          type="number"
-          name="price"
-          value={form.price}
-          onChange={handleChange}
-          placeholder="Price"
-          className="w-full border p-2 rounded-lg"
-        />
+            <div>
+              <label className="block text-sm font-light text-slate-700 mb-2">Price</label>
+              <div className="relative">
+                <IndianRupee className="absolute left-4 top-3.5 h-5 w-5 text-slate-400" />
+                <input
+                  type="number"
+                  name="price"
+                  value={form.price}
+                  onChange={handleChange}
+                  placeholder="0"
+                  min="0"
+                  step="0.01"
+                  className="w-full pl-12 pr-4 py-2.5 bg-slate-50 border rounded-lg font-light transition-all outline-none appearance-none border-slate-200 focus:bg-white focus:ring-2 focus:ring-slate-300"
+                />
+              </div>
+            </div>
+          </div>
 
-        {/* ✅ Only active when changed */}
-        {isChanged && (
-          <button
-            disabled={saving}
-            className="w-full bg-indigo-600 text-white py-2 rounded-xl hover:bg-indigo-700 transition"
-          >
-            {saving ? "Saving..." : "Update Product"}
-          </button>
-        )}
+          {!isChanged && (
+            <p className="text-center text-sm text-slate-500 font-light mt-4">
+              Edit any field to enable updates
+            </p>
+          )}
 
-        {!isChanged && (
-          <p className="text-center text-sm text-gray-400">
-            Edit any field to enable update
-          </p>
-        )}
-      </form>
+          {isChanged && (
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              disabled={saving}
+              type="submit"
+              className="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-lg font-light transition-all disabled:opacity-60 mt-4"
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="animate-spin mr-2 inline" size={18} />
+                  Updating...
+                </>
+              ) : (
+                "Update Product"
+              )}
+            </motion.button>
+          )}
+        </form>
+      </motion.div>
     </div>
   );
 };

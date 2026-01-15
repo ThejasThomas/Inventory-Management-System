@@ -13,6 +13,7 @@ export const ERROR_MESSAGE = {
   PRODUCT_NOT_ADDED: "Product added failed",
   FAILED_TO_FETCH_PRODUCT: "Failed to fetch products",
   PRODUCT_NOT_FOUND: "Product not found",
+  PRODUCT_ALREADY_EXISTS:"Product already exists"
 };
 export const HTTP_STATUS = {
   OK: 200,

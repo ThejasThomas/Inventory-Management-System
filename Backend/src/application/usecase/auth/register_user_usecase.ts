@@ -30,7 +30,6 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
       : null;
 
     const userId = generateUniqueId();
-    console.log('heyyylooooo')
     return await this._userRepo.save({
       ...user,
       password: hashedPassword ?? "",

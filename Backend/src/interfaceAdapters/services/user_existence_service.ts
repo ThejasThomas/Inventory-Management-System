@@ -9,6 +9,7 @@ export class UserExistenceService implements IUserExistenceService{
         private _userRepo:IUserRepository
     ){}
     async emailExists(email: string): Promise<boolean> {
+        console.log('heyyloooo')
         const [user]=await Promise.all([
             this._userRepo.findOne({email})
         ])

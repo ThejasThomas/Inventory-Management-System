@@ -41,6 +41,7 @@ const AddCustomerPage = () => {
     const fetchProducts = async () => {
       try {
         const res = await getMyProducts({ page: 1, limit: 100 })
+        console.log(res)
         setProductsLocal(res.products)
         dispatch(setProducts(res.products))
       } catch (err) {
@@ -68,8 +69,33 @@ const AddCustomerPage = () => {
     }
   }, [form, touched])
 
+  // Clamp quantity when product changes
+  useEffect(() => {
+    if (form.productName) {
+      const selected = products.find((p) => p.name === form.productName)
+      if (selected && form.quantity > selected.quantity) {
+        setForm((prev) => ({ ...prev, quantity: selected.quantity }))
+      }
+    }
+  }, [form.productName, products])
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
+
+    if (name === "quantity") {
+      let numValue = Number(value)
+      if (isNaN(numValue)) numValue = 1
+
+      const selected = products.find((p) => p.name === form.productName)
+      const maxQ = selected?.quantity || 999 // High default if no product selected
+      const clamped = Math.max(1, Math.min(numValue, maxQ))
+      setForm((prev: AddCustomerForm) => ({
+        ...prev,
+        [name]: clamped,
+      }))
+      return
+    }
+
     setForm((prev: AddCustomerForm) => ({
       ...prev,
       [name]: name === "quantity" ? Number(value) : value,
@@ -104,6 +130,9 @@ const AddCustomerPage = () => {
       setLoading(false)
     }
   }
+
+  const selectedProduct = products.find((p) => p.name === form.productName)
+  const availableQuantity = selectedProduct?.quantity || 0
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
@@ -230,11 +259,14 @@ const AddCustomerPage = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-light text-slate-700 mb-2">Quantity</label>
+            <label className="block text-sm font-light text-slate-700 mb-2">
+              Quantity (Available: {availableQuantity})
+            </label>
             <input
               type="number"
               name="quantity"
               min={1}
+              max={availableQuantity}
               value={form.quantity}
               onChange={handleChange}
               onBlur={handleBlur}
