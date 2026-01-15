@@ -11,11 +11,11 @@ import { CustomError } from "../../domain/utils/custom_error";
 import { Request, Response } from "express";
 import { LoginUserDTO } from "../../application/dto/login_user_dto";
 import { loginSchema } from "../../shared/validation/user_login_validation";
-import { success } from "zod";
 import { ILoginUserUseCase } from "../../domain/usecaseInterface/auth/login_user_usecase_interface";
 import { IGenerateTokenUseCase } from "../../domain/usecaseInterface/auth/generate_token_usecase_interface";
-import { setAuthCookies } from "../../shared/utils/cookie_helper";
-import { AuthRequest } from "../middleware/auth_middleware";
+import { clearAuthCookies, setAuthCookies } from "../../shared/utils/cookie_helper";
+import { ITokenService } from "../../domain/serviceInterface/token_service_interface";
+import { JwtPayload } from "jsonwebtoken";
 @injectable()
 export class UserController implements IUserController {
   constructor(
@@ -24,49 +24,60 @@ export class UserController implements IUserController {
     @inject("ILoginUserUseCase")
     private _loginUSerUseCase: ILoginUserUseCase,
     @inject("IGenerateTokenUseCase")
-    private _generateTokenUseCase: IGenerateTokenUseCase
+    private _generateTokenUseCase: IGenerateTokenUseCase,
+    @inject("ITokenService")
+    private _tokenService:ITokenService
   ) {}
 
   async refreshSession(req: Request, res: Response): Promise<void> {
-    try{
-          const authReq = req as AuthRequest;
-if (!authReq.user) {
-      res.status(HTTP_STATUS.UNAUTHORIZED).json({
-        success: false,
-        message: ERROR_MESSAGE.INVALID_TOKEN,
-      });
+  try {
+    const refreshToken = req.cookies?.refresh_token;
+
+    if (!refreshToken) {
+      res.status(401).json({ success: false, message: "No refresh token" });
       return;
     }
-      const {userId,email}=authReq.user;
 
-      if(!userId){
-        res.status(401).json({
-          success:false,
-          message:ERROR_MESSAGE.INVALID_TOKEN
-        })
-        return;
-      }
-      res.status(200).json({
-        success:true,
-        user:{
-          userId,
-          email
-        }
-      })
-    }catch(error){
-      console.log(error)
-      res.status(500).json({
-        success:false,
-        message:ERROR_MESSAGE.INTERNEL_SERVER_ERROR
-      })
+    const decoded = this._tokenService.verifyRefreshToken(refreshToken);
+
+    if (!decoded || typeof decoded === "string") {
+      res.status(401).json({ success: false, message: "Invalid refresh token" });
+      return;
     }
+
+    const { userId, email } = decoded as JwtPayload & {
+      userId: string;
+      email: string;
+    };
+
+    const newAccessToken = this._tokenService.generateAccessToken({ userId, email });
+
+    res.cookie("access_token", newAccessToken, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false,
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.status(200).json({
+      success: true,
+      user: { userId, email }
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({ success: false, message: "Refresh failed" });
   }
+}
+
 
   async register(req: Request, res: Response): Promise<void> {
     try {
+      console.log('bro')
       const validatedSchema = UserSchemaValidation.parse(req.body);
 
       await this._registerUserUseCase.execute(validatedSchema);
+      console.log('heyyy')
 
       res.status(HTTP_STATUS.CREATED).json({
         success: true,
@@ -141,5 +152,21 @@ if (!authReq.user) {
         return;
       }
     }
+  }
+  async logout(req: Request, res: Response): Promise<void> {
+    try {
+    clearAuthCookies(res, "access_token", "refresh_token");
+
+    res.status(HTTP_STATUS.OK).json({
+      success: true,
+      message: "Logout successful",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Logout failed",
+    });
+  }
   }
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { IProductData } from "../../types/product_types";
 import { getProductById, editProduct } from "../../service/userservice";
+import { toast } from "react-toastify";
 
 const EditProductPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -69,10 +70,10 @@ const EditProductPage = () => {
       setSaving(true);
       await editProduct(id, form);
 
-      alert("✅ Product updated successfully");
+      toast.success(" Product updated successfully");
       navigate("/home");
     } catch (err: any) {
-      alert(err?.response?.data?.message || "Update failed");
+      toast.error(err?.response?.data?.message || "Update failed");
     } finally {
       setSaving(false);
     }

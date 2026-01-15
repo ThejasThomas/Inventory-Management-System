@@ -20,6 +20,7 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
   ) {}
   async execute(user: IUserEntity): Promise<IUserEntity> {
     const { email, password } = user;
+    console.log('email',email)
     const isEmailExisting = await this._useExistenceService.emailExists(email);
     if (isEmailExisting) {
       throw new CustomError(ERROR_MESSAGE.EMAIL_EXISTS, HTTP_STATUS.CONFLICT);
@@ -29,7 +30,7 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
       : null;
 
     const userId = generateUniqueId();
-
+    console.log('heyyylooooo')
     return await this._userRepo.save({
       ...user,
       password: hashedPassword ?? "",

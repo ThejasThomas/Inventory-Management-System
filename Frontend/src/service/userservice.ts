@@ -20,7 +20,9 @@ export const signup = async(user:UserDTO):Promise<IAxiosResponse>=>{
     )
     return response.data
 }
-
+export const logout =async()=>{
+    await authAxiosInstance.post('/logout')
+}
 export const login =async (user:ILoginData):Promise<IAxiosResponse>=>{
     const response =await authAxiosInstance.post<IAxiosResponse>(
         "/login",
@@ -38,7 +40,7 @@ export const addProduct =async(product:IProductData):Promise<IAddProductResponse
     return  response.data;
 
 }
-export const getMyProducts =async(params:{page:number,limit:number}):Promise<IGetMyProductsResponse>=>{
+export const getMyProducts =async(params:{page:number,limit:number;search?:string}):Promise<IGetMyProductsResponse>=>{
     const response =await authAxiosInstance.get<IGetMyProductsResponse>(
         "get-products",
         {params}

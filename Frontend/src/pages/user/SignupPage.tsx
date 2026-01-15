@@ -6,7 +6,8 @@ import {
   signupSchema,
   type SignupForm,
 } from "../../validation/signup_validation";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const SignUpPage = () => {
   const [form, setForm] = useState<SignupForm>({
@@ -15,6 +16,8 @@ const SignUpPage = () => {
     phoneNumber: "",
     password: "",
   });
+  const navigate = useNavigate();
+
   const [touched, setTouched] = useState<
     Partial<Record<keyof SignupForm, boolean>>
   >({});
@@ -56,10 +59,12 @@ const SignUpPage = () => {
     try {
       setLoading(true);
       await signup(form);
-      alert("Account created successfully 🎉");
+      toast.success("Account created successfully 🎉");
       setForm({ fullName: "", email: "", phoneNumber: "", password: "" });
+          navigate("/login", { replace: true });
+
     } catch (err: any) {
-      alert(err?.response?.data?.message || "Signup failed");
+      toast.error(err?.response?.data?.message || "Signup failed");
     } finally {
       setLoading(false);
     }

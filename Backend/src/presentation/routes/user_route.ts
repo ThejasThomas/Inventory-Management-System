@@ -2,15 +2,13 @@ import { Request, Response } from "express";
 import { BaseRoute } from "./base_route";
 import { customerController, productController, userController } from "../di/resolver";
 import { authMiddleware } from "../middleware/auth_middleware";
-import { CustomerController } from "../controller/customer_controller";
-
 export class AuthRoutes extends BaseRoute{
     constructor(){
         super()
     }
 
     protected initializeRoutes(): void {
-        this.router.get('/refresh-session',authMiddleware,(req:Request,res:Response)=>{
+        this.router.get('/refresh-session',(req:Request,res:Response)=>{
             userController.refreshSession(req,res)
         })
         this.router.post('/signup',(req:Request,res:Response)=>{
@@ -49,6 +47,9 @@ export class AuthRoutes extends BaseRoute{
         })
         this.router.get("/item-report",authMiddleware,(req:Request,res:Response)=>{
             customerController.getItemReport(req,res)
+        })
+        this.router.post("/logout",(req:Request,res:Response)=>{
+            userController.logout(req,res)
         })
     }
 }

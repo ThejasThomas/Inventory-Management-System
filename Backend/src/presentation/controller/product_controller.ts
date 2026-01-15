@@ -78,7 +78,7 @@ export class ProductController implements IProductController {
   }
   async getMyProducts(req: Request, res: Response): Promise<void> {
     try {
-      const { page, limit } = req.query;
+      const { page, limit,search } = req.query;
       const authReq = req as AuthRequest;
 
       if (!authReq.user?.userId) {
@@ -91,7 +91,8 @@ export class ProductController implements IProductController {
       const result = await this._getProductsUseCase.execute(
         authReq.user.userId,
         Number(page),
-        Number(limit)
+        Number(limit),
+        search?String(search):""
       );
       res.status(200).json({
         success: true,

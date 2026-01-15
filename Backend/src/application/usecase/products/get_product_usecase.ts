@@ -10,7 +10,7 @@ export class GetProductUseCase implements IGetProductUseCase{
         private _productRepo:IProductRepository
     ){}
 
-    async execute(userId: string, page: number, limit: number): Promise<{ products: IProductEntity[]; total: number; }> {
-        return this._productRepo.findByUserId(userId,page,limit)
+    async execute(userId: string, page: number, limit: number,search:string): Promise<{ products: IProductEntity[]; total: number; }> {
+        return this._productRepo.findByUserId(userId,page,limit,search)
     }
 }

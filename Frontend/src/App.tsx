@@ -5,10 +5,10 @@ import SignUpPage from "./pages/user/SignupPage"
 import LoginPage from "./pages/user/LoginPage"
 import HomePage from "./pages/user/HomePage"
 import ProtectedRoute from "./utils/protected/ProtectRoute"
-import { useDispatch } from "react-redux"
-import type { AppDispath } from "./store/store"
-import { useEffect } from "react"
-import { refreshSessionThunk } from "./store/slices/user_slice"
+// import { useDispatch } from "react-redux"
+// import type { AppDispath } from "./store/store"
+// import { useEffect } from "react"
+// import { refreshSessionThunk } from "./store/slices/user_slice"
 import AddProductPage from "./pages/product/AddProductPage"
 import EditProductPage from "./pages/product/EditProductPage"
 import AddCustomerPage from "./pages/customer/AddCustomerPage"
@@ -18,21 +18,26 @@ import ItemReportPage from "./pages/customer/ItemReportPage"
 import MainLayout from "./components/MainLayout"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import PublicRoute from "./utils/protected/public_route"
 
 
 function App() {
-  const dispatch = useDispatch<AppDispath>()
+  // const dispatch = useDispatch<AppDispath>()
 
-  useEffect(() => {
-    dispatch(refreshSessionThunk())
-  }, [dispatch])
+  // useEffect(() => {
+  //   dispatch(refreshSessionThunk())
+  // }, [dispatch])
 
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<SignUpPage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={ <PublicRoute>
+      <SignUpPage />
+    </PublicRoute>} />
+          <Route path="/login" element={<PublicRoute>
+      <LoginPage />
+    </PublicRoute>} />
 
           {/* Protected routes with MainLayout */}
           <Route

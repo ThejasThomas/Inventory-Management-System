@@ -1,5 +1,5 @@
 export interface IUserEntity{
-    userId:string;
+    userId?:string;
     fullName:string;
     email:string;
     phoneNumber:string;

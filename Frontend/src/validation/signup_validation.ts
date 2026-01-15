@@ -6,7 +6,8 @@ export const signupSchema = z.object({
     .min(3, "Full name must be at least 3 characters")
     .regex(/^[a-zA-Z ]+$/, "Full name can contain only letters"),
 
-  email: z.string().email("Invalid email address"),
+  email: z.string()
+  .regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,"Invalid email address"),
 
   phoneNumber: z
     .string()

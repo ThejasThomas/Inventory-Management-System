@@ -20,16 +20,21 @@ async createProduct(product: IProductEntity): Promise<IProductEntity> {
         price:created.price,
     }
 }
-async findByUserId(userId: string, page: number, limit: number): Promise<{ products: IProductEntity[]; total: number; }> {
+async findByUserId(userId: string, page: number, limit: number,search:string): Promise<{ products: IProductEntity[]; total: number; }> {
     const skip =(page-1)*limit;
+      const query: any = { userId };
+
+    if (search) {
+    query.name = { $regex: search, $options: "i" };
+  }
 
     const [products,total]=await Promise.all([
-        ProductModel.find({userId})
+        ProductModel.find(query)
         .skip(skip)
         .limit(limit)
         .sort({createdAt:-1}),
 
-        ProductModel.countDocuments({userId})
+        ProductModel.countDocuments(query)
     ])
     return {
         total,
