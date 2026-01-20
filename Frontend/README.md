@@ -100,6 +100,6 @@ Other Tools:
 
 JWT Authentication
 
-Cloud (AWS / Vercel)
+AWS / Vercel
 
 PDF & Excel export libraries
