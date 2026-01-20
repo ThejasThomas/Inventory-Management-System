@@ -61,8 +61,7 @@ const SignUpPage = () => {
       await signup(form);
       toast.success("Account created successfully 🎉");
       setForm({ fullName: "", email: "", phoneNumber: "", password: "" });
-          navigate("/login", { replace: true });
-
+      navigate("/login", { replace: true });
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Signup failed");
     } finally {
@@ -71,21 +70,29 @@ const SignUpPage = () => {
   };
 
   return (
-<div className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4 overflow-hidden">
-  <div className="w-full max-w-6xl h-full flex flex-col lg:flex-row items-center justify-center gap-8 overflow-hidden">
+    <div className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4 overflow-hidden">
+      <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-center gap-10">
         {/* Left Side: Image Placeholder */}
-       <motion.div
-  initial={{ opacity: 0, scale: 0.9 }}
-  animate={{ opacity: 1, scale: 1 }}
-  transition={{ duration: 0.6 }}
-  className="flex-1 h-full max-h-[500px] bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl shadow-2xl flex items-center justify-center overflow-hidden relative"
->
-
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="w-full lg:flex-1 min-h-[280px] lg:min-h-[500px] bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl shadow-2xl flex items-center justify-center overflow-hidden relative"
+        >
           {/* Updated Image: Modern inventory dashboard placeholder - Replace with your own */}
-          <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80')" }}></div>
-          <div className="relative z-10 text-center text-white px-6">
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-20"
+            style={{
+              backgroundImage:
+                "url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80')",
+            }}
+          ></div>
+          <div className="relative z-10 text-center text-white px-8 max-w-lg">
             <h2 className="text-4xl font-bold mb-4">Welcome to InventoryPro</h2>
-            <p className="text-xl font-light opacity-90">Streamline your inventory management with premium tools designed for efficiency.</p>
+            <p className="text-xl font-light opacity-90">
+              Streamline your inventory management with premium tools designed
+              for efficiency.
+            </p>
             {/* Optional: Add a subtle icon or logo here */}
             <div className="mt-6">
               <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto">
@@ -96,22 +103,26 @@ const SignUpPage = () => {
         </motion.div>
 
         <motion.div
-  initial={{ opacity: 0, x: 40 }}
-  animate={{ opacity: 1, x: 0 }}
-  transition={{ duration: 0.6, delay: 0.2 }}
-  className="flex-1 h-full max-h-[500px] bg-white rounded-3xl shadow-2xl p-8 flex flex-col justify-center"
->
-
-
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="w-full max-w-md bg-white rounded-3xl shadow-2xl px-8 py-10 flex flex-col justify-center"
+        >
           <div className="text-center mb-6 lg:mb-8">
-            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-            <p className="text-gray-600 font-light text-sm lg:text-base">Join InventoryPro and manage your stock effortlessly</p>
+            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
+              Create Account
+            </h1>
+            <p className="text-gray-600 font-light text-sm lg:text-base">
+              Join InventoryPro and manage your stock effortlessly
+            </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5 lg:space-y-6 flex-1">
+          <form onSubmit={handleSubmit} className="space-y-5 lg:space-y-6">
             {/* Full Name */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Full Name
+              </label>
               <div className="relative">
                 <User className="absolute left-3 top-4 h-5 w-5 text-gray-400" />
                 <input
@@ -136,7 +147,9 @@ const SignUpPage = () => {
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Email Address
+              </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-4 h-5 w-5 text-gray-400" />
                 <input
@@ -161,7 +174,9 @@ const SignUpPage = () => {
 
             {/* Phone */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Phone Number
+              </label>
               <div className="relative">
                 <Phone className="absolute left-3 top-4 h-5 w-5 text-gray-400" />
                 <input
@@ -186,7 +201,9 @@ const SignUpPage = () => {
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Password
+              </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-4 h-5 w-5 text-gray-400" />
                 <button
