@@ -1,73 +1,105 @@
-# React + TypeScript + Vite
+📦 Inventory Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An Inventory Management System built using the MERN stack that helps businesses manage products, customers, and sales efficiently with reporting and export features.
+🚀 Features
+🔐 1. User Authentication
 
-Currently, two official plugins are available:
+User registration and login
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Secure authentication using JWT
 
-## React Compiler
+Protected routes for authorized users
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+📦 2. Inventory Management
 
-## Expanding the ESLint configuration
+Add new inventory items with:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Name
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Description
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Quantity
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Price
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+CRUD functionality:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+✅ Create items
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+📄 Read/View items
+
+✏️ Update items
+
+❌ Delete items
+
+Search items by name
+
+Add and manage customers with:
+
+Name
+
+Address
+
+Mobile number
+
+💰 3. Sales Management
+
+Record product sales with:
+
+Date
+
+Sold quantity
+
+Customer name or Cash sale
+
+Automatically update stock after sales
+
+Track customer-wise transactions
+Reports
+
+📈 Sales Report – View all sales with filters
+
+📦 Item Report – Stock and inventory details
+
+Purchase history
+
+Outstanding/summary view
+
+5. Data Export
+
+🖨️ Print reports
+
+📄 Export to PDF
+
+📊 Export to Excel
+
+🛠️ Tech Stack
+
+Frontend:
+
+React.js
+
+TypeScript
+
+Tailwind CSS
+
+Redux Toolkit
+
+Backend:
+
+Node.js
+
+Express.js
+
+TypeScript
+
+MongoDB
+
+Mongoose
+Other Tools:
+
+JWT Authentication
+
+Cloud (AWS / Vercel)
+
+PDF & Excel export libraries
