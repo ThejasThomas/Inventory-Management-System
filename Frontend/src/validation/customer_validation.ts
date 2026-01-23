@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const addCustomerSchema = z.object({
-  customerName: z.string().min(3, "Customer name must be at least 3 characters"),
+  customerName: z.string().trim().min(3, "Customer name must be at least 3 characters"),
   address: z.string().min(5, "Address must be at least 5 characters"),
   mobileNumber: z
     .string()

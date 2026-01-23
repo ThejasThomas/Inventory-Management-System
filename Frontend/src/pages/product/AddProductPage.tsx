@@ -32,33 +32,48 @@ const AddProductPage = () => {
   const [apiMessage, setApiMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (Object.keys(touched).length === 0) return;
+  if (Object.keys(touched).length === 0) return;
 
-    const result = addProductSchema.safeParse(form);
+  const result = addProductSchema.safeParse({
+    ...form,
+    quantity: Number(form.quantity),
+    price: Number(form.price),
+  });
 
-    if (result.success) {
-      setErrors({});
-      // setIsValid(true);
-    } else {
-      const fieldErrors: Partial<Record<keyof AddProductForm, string>> = {};
-      result.error.issues.forEach((err) => {
-        const field = err.path[0] as keyof AddProductForm;
-        fieldErrors[field] = err.message;
-      });
-      setErrors(fieldErrors);
-      // setIsValid(false);
-    }
-  }, [form, touched]);
+  if (result.success) {
+    setErrors({});
+  } else {
+    const fieldErrors: Partial<Record<keyof AddProductForm, string>> = {};
+    result.error.issues.forEach((err) => {
+      const field = err.path[0] as keyof AddProductForm;
+      fieldErrors[field] = err.message;
+    });
+    setErrors(fieldErrors);
+  }
+}, [form, touched]);
+
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: name === "quantity" || name === "price" ? Number(value) : value,
-    }));
-  };
+  e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+) => {
+  const { name, value } = e.target;
+
+  if (name === "quantity" || name === "price") {
+    if (value === "") {
+      setForm((prev) => ({ ...prev, [name]: "" }));
+      return;
+    }
+
+    const num = Number(value);
+    if (!isNaN(num)) {
+      setForm((prev) => ({ ...prev, [name]: num }));
+    }
+    return;
+  }
+
+  setForm((prev) => ({ ...prev, [name]: value }));
+};
+
 
   const handleBlur = (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -67,29 +82,34 @@ const AddProductPage = () => {
     setTouched((prev) => ({ ...prev, [name]: true }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setTouched({ name: true, description: true, quantity: true, price: true });
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setTouched({ name: true, description: true, quantity: true, price: true });
 
-    const result = addProductSchema.safeParse(form);
-    if (!result.success) return;
-
-    try {
-      setLoading(true);
-      setApiMessage(null);
-      const response = await addProduct(form);
-      const successMsg = response?.message || "Product added successfully";
-      toast.success(successMsg);
-
-      setApiMessage("Product added successfully");
-      setTimeout(() => navigate("/home"), 800);
-    } catch (err: any) {
-      const errorMsg = err?.response?.data?.message || "Failed to add product";
-      toast.error(errorMsg);
-    } finally {
-      setLoading(false);
-    }
+  const payload = {
+    ...form,
+    quantity: Number(form.quantity),
+    price: Number(form.price),
   };
+
+  const result = addProductSchema.safeParse(payload);
+  if (!result.success) return;
+
+  try {
+    setLoading(true);
+    setApiMessage(null);
+
+    const response = await addProduct(payload); // matches IProductData
+    toast.success(response?.message || "Product added successfully");
+
+    setTimeout(() => navigate("/home"), 800);
+  } catch (err: any) {
+    toast.error(err?.response?.data?.message || "Failed to add product");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
